@@ -1,7 +1,6 @@
 {
     "name": "wolfgang-degroot/chartboy",
     "description": "A simple, lightweight and easy way to showcase data with charts.css",
-	"version": "1.0.0",
     "license": "MIT",
     "autoload": {
         "psr-4": {
