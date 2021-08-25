@@ -4,6 +4,17 @@
 
 TODO
 
+### Linking to charts.css easily via ChartBoy
+charts.css can be linked to via the function `ChartBoy\linkStyle(location);`, where 'location' is a string.
+ - There are two 'shorthand' presets:
+   - `jsdelivr` = https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css
+   - unpkg = https://unpkg.com/charts.css/dist/charts.min.css
+   - _Anything other than this will be treated as a link, local or not._
+      - e.g. `/css/charts.min.css` or `https://cdn.example.com/css/charts.min.css`
+This function returns `<link rel='stylesheet' href='$link'>` where `$link` is the location of the charts.css file.
+
+_Clarification: If you are using any other method or have already linked to charts.css elsewhere in your head, this function is redundant._
+
 ## Usage
 
 ### Creating a new chart
