@@ -38,12 +38,9 @@ class ChartBoy
 
     public function __construct(array $data, string $type = "bar", $caption = null)
     {
-        $this->data = $data;
+        $this->inputData($data);
         $this->setType($type);
         $this->setCaption($caption);
-
-        $this->min = min($data);
-        $this->max = max($data);
 
         // charts.css settings
         $this->setting = [
