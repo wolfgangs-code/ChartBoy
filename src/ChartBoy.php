@@ -38,12 +38,12 @@ class ChartBoy
     // charts.css variables
     protected $setting;
 
-    public function __construct(array $data, string $type = "bar", $caption = null)
+    public function __construct(array $data, string $type = "bar", string $primaryAxis = null, string $dataAxis = null, $caption = null)
     {
         $this->inputData($data);
         $this->setType($type);
         $this->setCaption($caption);
-        $this->setAxis();
+        $this->setAxis($primaryAxis, $dataAxis);
 
         // charts.css settings
         $this->setting = [
