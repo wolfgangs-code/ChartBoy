@@ -3,6 +3,10 @@ namespace ChartBoy;
 
 function linkStyle (string $location)
 {
+	// This function soley links to a charts.css file,
+	// whether it be from a pre-done CDN, or a local file.
+	// 'shorthands' for jsdelivr and unpkg are included
+	// for simple deployment if that's what you would do anyways.
 	$link;
 	switch ($location) {
 		case "jsdelivr":
@@ -23,10 +27,10 @@ class ChartBoy
     public $type;
     // Types: bar, column, area, line
     // TODO: radial, pie, radar, polar
-    public $data;
-    public $caption;
+    public $data;    // Array of data in the ["label" => numericValue] where "label" is optional.
+    public $caption; // The 'caption' of the chart. Optional.
     private $min;
-    private $max;
+    private $max;    // The min/max of the chart is calculated automatically.
 
     public function __construct(array $data, string $type = "bar", $caption = null)
     {
@@ -48,7 +52,8 @@ class ChartBoy
 
     public function inputData($array)
     {
-        $this->data = $array; // $item -> $value
+		// Takes in a new input data array and updates calculations regarding it.
+        $this->data = $array;
         $this->min = min($array);
         $this->max = max($array);
     }
@@ -59,8 +64,14 @@ class ChartBoy
     {
         print("<table class='charts-css {$this->type}'>");
         foreach ($this->data as $item => $value) {
+			// Loop through each data item
+
+			// Calculate a percentage on a scale of 100.
+			// This is to hide exact values from the public,
+			// in case such information is sensitive.
             $percent = round(($value / $this->max) * 100, 2);
 			$style = "--size:calc({$percent}/100)";
+
             print("<td style='{$style}'>{$item}</td>");
         }
         print("</table>");
