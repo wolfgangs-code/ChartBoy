@@ -58,10 +58,10 @@ class ChartBoy
             "labels-align-center" => false,
             "labels-align-end" => false,
             "show-primary-axis" => false,
-            "show-n-secondary-axes" => false,
+            "show-*-secondary-axes" => false,
             "show-data-axes" => false,
-            "data-spacing-n" => false,
-            "datasets-spacing-n" => false,
+            "data-spacing-*" => false,
+            "datasets-spacing-*" => false,
             "reverse-data" => false,
             "reverse-datasets" => false,
             "stacked" => false,
@@ -107,9 +107,8 @@ class ChartBoy
         }
     }
 
-    // charts.css
-    public function hideData($bool = true)
-    {$this->hideData = $bool;}
+    public function changeSetting($key, $value = true)
+    {$this->setting[$key] = $value;}
 
     public function inputData($array)
     {
