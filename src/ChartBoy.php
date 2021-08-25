@@ -78,6 +78,21 @@ class ChartBoy
         return round(($n / $this->max), 3);
     }
 
+	private function compileSettings()
+	{
+		$html;
+		foreach ($this->setting as $option => $value) {
+			if (!$value) {continue;}
+			// Replace * with proper number
+			if (strpos($option, "*")) {
+				$int = (is_numeric($value)) ? $value : 1;
+				$option = str_replace("*", $int, $option);
+			}
+			$html .= " ".$option;
+		}
+		return $html;
+	}
+
     /* Setters */
 
     public function setCaption($caption, $display = true)
@@ -130,12 +145,14 @@ class ChartBoy
     public function renderChart($idset = null)
     {
         $id = (isset($idset)) ? " id='$idset'" : null;
-        print("\n\t<table class='charts-css {$this->type}'{$id}>");
+		$settings = $this->compileSettings();
+
+		/* Begin Render */
+        print("\n\t<table class='charts-css {$this->type}{$settings}'{$id}>");
         if (!empty($this->caption)) {print("\n\t<caption>{$this->caption}</caption>");}
         print("\n\t<tbody>\n");
         foreach ($this->data as $item => $value) {
             // Loop through each data item
-
             $current = $this->makeScale($value);
             $next = $this->makeScale(next($this->data));
 
