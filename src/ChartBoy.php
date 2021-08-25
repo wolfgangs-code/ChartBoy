@@ -117,9 +117,10 @@ class ChartBoy
 
     // Getters
 
-    public function renderChart()
+    public function renderChart($idset = null)
     {
-        print("\n\t<table class='charts-css {$this->type}'>");
+		$id = (isset($idset)) ? " id='$idset'" : null;
+        print("\n\t<table class='charts-css {$this->type}'{$id}>");
         if (!empty($this->caption)) {print("\n\t<caption>{$this->caption}</caption>");}
         print("\n\t<tbody>\n");
         foreach ($this->data as $item => $value) {
