@@ -40,6 +40,7 @@ class ChartBoy
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
     private $startPoint;
+	private $colors; // Array of colors per-element.
     protected $setting;
 
     public function __construct(array $data, string $type = "bar", string $primaryAxis = null, string $dataAxis = null, $caption = null)
@@ -136,6 +137,17 @@ class ChartBoy
         $this->dataAxis = $data;
     }
 
+    public function setColor($element, $color = null)
+    {
+        // Set a unique color for an individual element.
+		// If no color is given, it will clear its color.
+		if ($color === null) {
+			unset($this->colors[$element]);
+		} else {
+			$this->colors[$element] = $color;
+		}
+    }
+
     public function changeSetting($key, $value = true)
     {
 		// Change a current setting, defaulting to making it 'true'
@@ -168,17 +180,20 @@ class ChartBoy
             $current = $this->makeScale($value);
             $next = $this->makeScale(next($this->data));
 
+			// Get key's color, if set.
+			$color = (isset($this->colors[$item])) ? "--color:".$this->colors[$item] : null;
+
             // Does this chart require a starting point?
             if ($this->startPoint === true) {
                 $start = "--start:{$current};";
-                $size = "--size:{$next}";
+                $size = "--size:{$next};";
                 if ($item === array_key_last($this->data)) {break;}
             } else {
                 $start = null;
-                $size = "--size:{$current}";
+                $size = "--size:{$current};";
             }
 
-            print("\t\t<tr><td style='{$start}{$size}'><span class='data'>{$item}</span></td></tr>\n");
+            print("\t\t<tr><td style='{$start}{$size}{$color}'><span class='data'>{$item}</span></td></tr>\n");
         }
         print("\t</tbody>\n\t");
         print("\t</table>\n\t");
