@@ -2,11 +2,11 @@
 namespace ChartBoy;
 
 /*
-	ChartBoy 0.9.0 for charts.css 0.9.0
+ChartBoy 0.9.0 for charts.css 0.9.0
 
-	wolfgang-degroot/chartboy
-	by Wolfgang de Groot
-*/
+wolfgang-degroot/chartboy
+by Wolfgang de Groot
+ */
 
 function linkStyle(string $location)
 {
@@ -22,7 +22,7 @@ function linkStyle(string $location)
         case "unpkg":
             $link = "https://unpkg.com/charts.css/dist/charts.min.css";
             break;
-		// TO CONSIDER: 'npm' and 'yarn' presets for installations
+        // TO CONSIDER: 'npm' and 'yarn' presets for installations
         default:
             $link = $location;
     }
@@ -37,10 +37,11 @@ class ChartBoy
     public $caption; // The 'caption' of the chart. Optional.
     public $primaryAxis;
     public $dataAxis;
+    private $scope;
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
     private $startPoint;
-	private $colors; // Array of colors per-element.
+    private $colors; // Array of colors per-element.
     protected $setting;
 
     public function __construct(array $data, string $type = "bar", string $primaryAxis = null, string $dataAxis = null, $caption = null)
@@ -49,6 +50,7 @@ class ChartBoy
         $this->setType($type);
         $this->setCaption($caption);
         $this->setAxis($primaryAxis, $dataAxis);
+        $this->scope = "row";
     }
 
     /* Logic */
@@ -90,8 +92,8 @@ class ChartBoy
             case "area":
             case "line":
                 $this->startPoint = true;
-				// Below settings are not supported with the above data types.
-				// See https://chartscss.org/development/supported-features/#classes
+                // Below settings are not supported with the above data types.
+                // See https://chartscss.org/development/supported-features/#classes
                 $this->setting["datasets-spacing-n"] = false;
                 $this->setting["reverse-datasets"] = false;
                 $this->setting["stacked"] = false;
@@ -104,7 +106,7 @@ class ChartBoy
         if (!isset($caption)) {return;}
         $this->caption = $caption;
         // If someone sets the caption, assume they want it to be seen,
-		// unless 'false' is specified as the second argument.
+        // unless 'false' is specified as the second argument.
         $this->setting["show-heading"] = $display;
     }
 
@@ -118,25 +120,25 @@ class ChartBoy
     public function setColor($element, $color = null)
     {
         // Set a unique color for an individual element.
-		// If no color is given, it will clear its color.
-		if ($color === null) {
-			unset($this->colors[$element]);
-		} else {
-			$this->colors[$element] = $color;
-		}
+        // If no color is given, it will clear its color.
+        if ($color === null) {
+            unset($this->colors[$element]);
+        } else {
+            $this->colors[$element] = $color;
+        }
     }
 
     public function changeSetting($key, $value = true)
     {
-		// Change a current setting, defaulting to making it 'true'
-		// if they do not specify what, as all settings are 'false' by default.
-		$this->setting[$key] = $value;
-	}
+        // Change a current setting, defaulting to making it 'true'
+        // if they do not specify what, as all settings are 'false' by default.
+        $this->setting[$key] = $value;
+    }
 
     public function inputData($array)
     {
         // Takes in a new input data array and updates calculations regarding it.
-		// TODO: 'Multiple dataset' support
+        // TODO: 'Multiple dataset' support
         $this->data = $array;
         $this->min = min($array);
         $this->max = max($array);
@@ -158,8 +160,8 @@ class ChartBoy
             $current = $this->makeScale($value);
             $next = $this->makeScale(next($this->data));
 
-			// Get key's color, if set.
-			$color = (isset($this->colors[$item])) ? "--color:".$this->colors[$item] : null;
+            // Get key's color, if set.
+            $color = (isset($this->colors[$item])) ? "--color:" . $this->colors[$item] : null;
 
             // Does this chart require a starting point?
             if ($this->startPoint === true) {
@@ -171,7 +173,21 @@ class ChartBoy
                 $size = "--size:{$current};";
             }
 
-            print("\t\t<tr><td style='{$start}{$size}{$color}'><span class='data'>{$item}</span></td></tr>\n");
+            // Don't label items which have none assigned (sequential).
+            if (is_string($item)) {
+				$labelHide = null;
+				$labelCode = "<th scope='{$this->scope}'>{$item}</th>";
+			} else {
+				$labelHide = " class='hide-label'";
+				$labelCode = null;
+			}
+
+            print("\t\t<tr{$label}>");
+			/**/print($labelCode);
+            /**/print("<td style='{$start}{$size}{$color}'>");
+            /****/print("<span class='data'>{$item}</span>");
+            /**/print("</td>");
+			print("</tr>\n");
         }
         print("\t</tbody>\n\t");
         print("\t</table>\n\t");
