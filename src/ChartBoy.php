@@ -95,14 +95,6 @@ class ChartBoy
 
     /* Setters */
 
-    public function setCaption($caption, $display = true)
-    {
-        if (!isset($caption)) {return;}
-        $this->caption = $caption;
-        // If someone sets the caption, assume they want it to be seen
-        $this->setting["show-heading"] = $display;
-    }
-
     public function setType($type)
     {
         $this->type = $type;
@@ -120,6 +112,14 @@ class ChartBoy
                 $this->setting["stacked"] = false;
                 break;
         }
+    }
+
+    public function setCaption($caption, $display = true)
+    {
+        if (!isset($caption)) {return;}
+        $this->caption = $caption;
+        // If someone sets the caption, assume they want it to be seen
+        $this->setting["show-heading"] = $display;
     }
 
     public function setAxis($primary = null, $data = null)
