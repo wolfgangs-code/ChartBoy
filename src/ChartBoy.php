@@ -1,11 +1,13 @@
 <?php
 namespace ChartBoy;
 
-/*
-ChartBoy 0.9.0 for charts.css 0.9.0
+/* ChartBoy 0.9.0 for charts.css 0.9.0 /*
 
-wolfgang-degroot/chartboy
-by Wolfgang de Groot
+/* wolfgang-degroot/chartboy    */
+/* by Wolfgang de Groot            */
+
+/* Custom settings:
+// hide-data-strict:    Enables 'hide-data' and replaces text with a dummy value
  */
 
 function linkStyle(string $location)
@@ -133,6 +135,12 @@ class ChartBoy
         // Change a current setting, defaulting to making it 'true'
         // if they do not specify what, as all settings are 'false' by default.
         $this->setting[$key] = $value;
+        // Special scenarios
+        switch ($key) {
+            case "hide-data-strict":
+                $this->setting["hide-data"] = true;
+                break;
+        }
     }
 
     public function inputData($array)
@@ -175,19 +183,23 @@ class ChartBoy
 
             // Don't label items which have none assigned (sequential).
             if (is_string($item)) {
-				$labelHide = null;
-				$labelCode = "<th scope='{$this->scope}'>{$item}</th>";
-			} else {
-				$labelHide = " class='hide-label'";
-				$labelCode = null;
-			}
+                $labelHide = null;
+                $labelCode = "<th scope='{$this->scope}'>{$item}</th>";
+            } else {
+                $labelHide = " class='hide-label'";
+                $labelCode = null;
+            }
+
+            // Hide data if hide data is set
+            $strict = $this->setting["hide-data-strict"];
+            $figure = ($strict) ? $strict : $value;
 
             print("\t\t<tr{$label}>");
-			/**/print($labelCode);
+            /**/print($labelCode);
             /**/print("<td style='{$start}{$size}{$color}'>");
-            /****/print("<span class='data'>{$item}</span>");
+            /****/print("<span class='data'>{$figure}</span>");
             /**/print("</td>");
-			print("</tr>\n");
+            print("</tr>\n");
         }
         print("\t</tbody>\n\t");
         print("\t</table>\n\t");
