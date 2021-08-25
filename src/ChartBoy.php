@@ -29,6 +29,8 @@ class ChartBoy
     // TODO: radial, pie, radar, polar
     public $data; // Array of data in the ["label" => numericValue] where "label" is optional.
     public $caption; // The 'caption' of the chart. Optional.
+    public $primaryAxis;
+    public $dataAxis;
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
     private $startPoint;
@@ -41,6 +43,7 @@ class ChartBoy
         $this->inputData($data);
         $this->setType($type);
         $this->setCaption($caption);
+        $this->setAxis();
 
         // charts.css settings
         $this->setting = [
@@ -104,6 +107,13 @@ class ChartBoy
         }
     }
 
+    public function setAxis($primary = null, $data = null)
+    {
+        // Takes in a new input data array and updates calculations regarding it.
+        $this->primaryAxis = $primary;
+        $this->dataAxis = $data;
+    }
+
     public function changeSetting($key, $value = true)
     {$this->setting[$key] = $value;}
 
@@ -119,7 +129,7 @@ class ChartBoy
 
     public function renderChart($idset = null)
     {
-		$id = (isset($idset)) ? " id='$idset'" : null;
+        $id = (isset($idset)) ? " id='$idset'" : null;
         print("\n\t<table class='charts-css {$this->type}'{$id}>");
         if (!empty($this->caption)) {print("\n\t<caption>{$this->caption}</caption>");}
         print("\n\t<tbody>\n");
@@ -143,5 +153,7 @@ class ChartBoy
         }
         print("\t</tbody>\n\t");
         print("\t</table>\n\t");
+        if (isset($this->primaryAxis)) {print("<div class='primary-axis'>{$this->primaryAxis}</div>\n");}
+        if (isset($this->dataAxis)) {print("<div class='data-axis'>{$this->dataAxis}</div>\n");}
     }
 }
