@@ -31,21 +31,41 @@ class ChartBoy
     public $caption; // The 'caption' of the chart. Optional.
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
+	private $startPoint;
 
     // charts.css variables
-    protected $hideData;
+    protected $setting;
 
     public function __construct(array $data, string $type = "bar", $caption = null)
     {
         $this->data = $data;
-        $this->type = $type;
-        $this->caption = $caption;
+        $this->setType($type);
+        $this->setCaption($caption);
 
         $this->min = min($data);
         $this->max = max($data);
 
-        // charts.css
-        $this->hideData = false;
+        // charts.css settings
+        $this->setting = [
+			// A sea of falses
+			"show-heading"			=> false,
+			"multiple"				=> false,
+			"hide-data"				=> false,
+			"show-data-on-hover"	=> false,
+			"reverse"				=> false,
+			"show-labels" 			=> false,
+			"labels-align-start"	=> false,
+			"labels-align-center"	=> false,
+			"labels-align-end" 		=> false,
+			"show-primary-axis" 	=> false,
+			"show-n-secondary-axes" => false,
+			"show-data-axes"		=> false,
+			"data-spacing-n"		=> false,
+			"datasets-spacing-n"	=> false,
+			"reverse-data"			=> false,
+			"reverse-datasets"		=> false,
+			"stacked"				=> false
+		];
     }
 
     // Logic
@@ -60,11 +80,29 @@ class ChartBoy
 
     /* Setters */
 
-    public function setCaption($caption)
-    {$this->caption = $caption;}
+    public function setCaption($caption, $display = true)
+    {
+		if (!isset($caption)){return;}
+		$this->caption = $caption;
+		// If someone sets the caption, assume they want it to be seen
+		$this->setting["show-heading"] = $display;
+	}
 
     public function setType($type)
-    {$this->type = $type;}
+    {
+		$this->type = $type;
+		// Special case handling
+		switch ($type) {
+			case "bar":
+			case "column":
+				$this->startPoint = false;
+				break;
+			case "area":
+			case "line":
+				$this->startPoint = true;
+				break;
+		}
+	}
 
     // charts.css
     public function hideData($bool = true)
@@ -80,7 +118,7 @@ class ChartBoy
 
     // Getters
 
-    public function renderChart($startPoint = false)
+    public function renderChart()
     {
         print("\n\t<table class='charts-css {$this->type}'>");
         if (!empty($this->caption)) {print("\n\t<caption>{$this->caption}</caption>");}
@@ -92,7 +130,7 @@ class ChartBoy
             $next = $this->makeScale(next($this->data));
 
             // Does this chart require a starting point?
-            if ($startPoint) {
+            if ($this->startPoint === true) {
                 $start = "--start:{$current};";
                 $size = "--size:{$next}";
                 if ($item === array_key_last($this->data)) {break;}
