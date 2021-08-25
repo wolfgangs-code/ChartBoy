@@ -42,6 +42,17 @@ class ChartBoy
         $this->max = max($data);
     }
 
+	// Logic
+
+
+	private function makeScale($n)
+	{
+		// Calculate a percentage on a scale of 100.
+		// This is to hide exact values from the public,
+		// in case such information is sensitive.
+		return round(($n / $this->max), 3);
+	}
+
     // Setters
 
     public function setCaption($caption)
@@ -60,20 +71,26 @@ class ChartBoy
 
     // Getters
 
-    public function renderChart($noStyle = false)
+    public function renderChart($startPoint = false)
     {
-        print("<table class='charts-css {$this->type}'>");
+        print("\n\t<table class='charts-css {$this->type}'>\n");
         foreach ($this->data as $item => $value) {
 			// Loop through each data item
 
-			// Calculate a percentage on a scale of 100.
-			// This is to hide exact values from the public,
-			// in case such information is sensitive.
-            $percent = round(($value / $this->max) * 100, 2);
-			$style = "--size:calc({$percent}/100)";
+			$current = $this->makeScale($value);
+            $next    = $this->makeScale(next($this->data));
 
-            print("<td style='{$style}'>{$item}</td>");
+			// Does this chart require a starting point?
+			if ($startPoint) {
+				$start = "--start:{$current} ";
+				$size  = "--size:{$next}";
+			} else {
+				$start = null;
+				$size  = "--size:{$current}";
+			}
+
+            print("\t\t<td style='{$start}{$size}'>{$item}</td>\n");
         }
-        print("</table>");
+        print("\t</table>\n\t");
     }
 }
