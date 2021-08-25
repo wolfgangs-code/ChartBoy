@@ -49,28 +49,6 @@ class ChartBoy
         $this->setType($type);
         $this->setCaption($caption);
         $this->setAxis($primaryAxis, $dataAxis);
-
-        // charts.css settings
-        $this->setting = [
-            // A sea of falses
-            "show-heading" => false,
-            "multiple" => false,
-            "hide-data" => false,
-            "show-data-on-hover" => false,
-            "reverse" => false,
-            "show-labels" => false,
-            "labels-align-start" => false,
-            "labels-align-center" => false,
-            "labels-align-end" => false,
-            "show-primary-axis" => false,
-            "show-*-secondary-axes" => false,
-            "show-data-axes" => false,
-            "data-spacing-*" => false,
-            "datasets-spacing-*" => false,
-            "reverse-data" => false,
-            "reverse-datasets" => false,
-            "stacked" => false,
-        ];
     }
 
     /* Logic */
