@@ -31,7 +31,7 @@ class ChartBoy
     public $caption; // The 'caption' of the chart. Optional.
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
-	private $startPoint;
+    private $startPoint;
 
     // charts.css variables
     protected $setting;
@@ -47,25 +47,25 @@ class ChartBoy
 
         // charts.css settings
         $this->setting = [
-			// A sea of falses
-			"show-heading"			=> false,
-			"multiple"				=> false,
-			"hide-data"				=> false,
-			"show-data-on-hover"	=> false,
-			"reverse"				=> false,
-			"show-labels" 			=> false,
-			"labels-align-start"	=> false,
-			"labels-align-center"	=> false,
-			"labels-align-end" 		=> false,
-			"show-primary-axis" 	=> false,
-			"show-n-secondary-axes" => false,
-			"show-data-axes"		=> false,
-			"data-spacing-n"		=> false,
-			"datasets-spacing-n"	=> false,
-			"reverse-data"			=> false,
-			"reverse-datasets"		=> false,
-			"stacked"				=> false
-		];
+            // A sea of falses
+            "show-heading" => false,
+            "multiple" => false,
+            "hide-data" => false,
+            "show-data-on-hover" => false,
+            "reverse" => false,
+            "show-labels" => false,
+            "labels-align-start" => false,
+            "labels-align-center" => false,
+            "labels-align-end" => false,
+            "show-primary-axis" => false,
+            "show-n-secondary-axes" => false,
+            "show-data-axes" => false,
+            "data-spacing-n" => false,
+            "datasets-spacing-n" => false,
+            "reverse-data" => false,
+            "reverse-datasets" => false,
+            "stacked" => false,
+        ];
     }
 
     // Logic
@@ -82,27 +82,30 @@ class ChartBoy
 
     public function setCaption($caption, $display = true)
     {
-		if (!isset($caption)){return;}
-		$this->caption = $caption;
-		// If someone sets the caption, assume they want it to be seen
-		$this->setting["show-heading"] = $display;
-	}
+        if (!isset($caption)) {return;}
+        $this->caption = $caption;
+        // If someone sets the caption, assume they want it to be seen
+        $this->setting["show-heading"] = $display;
+    }
 
     public function setType($type)
     {
-		$this->type = $type;
-		// Special case handling
-		switch ($type) {
-			case "bar":
-			case "column":
-				$this->startPoint = false;
-				break;
-			case "area":
-			case "line":
-				$this->startPoint = true;
-				break;
-		}
-	}
+        $this->type = $type;
+        // Special case handling
+        switch ($type) {
+            case "bar":
+            case "column":
+                $this->startPoint = false;
+                break;
+            case "area":
+            case "line":
+                $this->startPoint = true;
+                $this->setting["datasets-spacing-n"] = false;
+                $this->setting["reverse-datasets"] = false;
+                $this->setting["stacked"] = false;
+                break;
+        }
+    }
 
     // charts.css
     public function hideData($bool = true)
