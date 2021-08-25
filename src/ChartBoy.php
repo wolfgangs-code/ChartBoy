@@ -1,6 +1,13 @@
 <?php
 namespace ChartBoy;
 
+/*
+	ChartBoy 0.9.0 for charts.css 0.9.0
+
+	wolfgang-degroot/chartboy
+	by Wolfgang de Groot
+*/
+
 function linkStyle(string $location)
 {
     // This function soley links to a charts.css file,
@@ -15,6 +22,7 @@ function linkStyle(string $location)
         case "unpkg":
             $link = "https://unpkg.com/charts.css/dist/charts.min.css";
             break;
+		// TO CONSIDER: 'npm' and 'yarn' presets for installations
         default:
             $link = $location;
     }
@@ -24,9 +32,7 @@ function linkStyle(string $location)
 class ChartBoy
 {
     /* Variables */
-    public $type;
-    // Types: bar, column, area, line
-    // TODO: radial, pie, radar, polar
+    public $type; // Valid types: bar, column, area, line. Future: radial, pie, radar, polar
     public $data; // Array of data in the ["label" => numericValue] where "label" is optional.
     public $caption; // The 'caption' of the chart. Optional.
     public $primaryAxis;
@@ -34,8 +40,6 @@ class ChartBoy
     private $min;
     private $max; // The min/max of the chart is calculated automatically.
     private $startPoint;
-
-    // charts.css variables
     protected $setting;
 
     public function __construct(array $data, string $type = "bar", string $primaryAxis = null, string $dataAxis = null, $caption = null)
@@ -68,7 +72,7 @@ class ChartBoy
         ];
     }
 
-    // Logic
+    /* Logic */
 
     private function makeScale($n)
     {
@@ -78,20 +82,20 @@ class ChartBoy
         return round(($n / $this->max), 3);
     }
 
-	private function compileSettings()
-	{
-		$html;
-		foreach ($this->setting as $option => $value) {
-			if (!$value) {continue;}
-			// Replace * with proper number
-			if (strpos($option, "*")) {
-				$int = (is_numeric($value)) ? $value : 1;
-				$option = str_replace("*", $int, $option);
-			}
-			$html .= " ".$option;
-		}
-		return $html;
-	}
+    private function compileSettings()
+    {
+        $html;
+        foreach ($this->setting as $option => $value) {
+            if (!$value) {continue;}
+            // Replace * with proper number
+            if (strpos($option, "*")) {
+                $int = (is_numeric($value)) ? $value : 1;
+                $option = str_replace("*", $int, $option);
+            }
+            $html .= " " . $option;
+        }
+        return $html;
+    }
 
     /* Setters */
 
@@ -107,6 +111,8 @@ class ChartBoy
             case "area":
             case "line":
                 $this->startPoint = true;
+				// Below settings are not supported with the above data types.
+				// See https://chartscss.org/development/supported-features/#classes
                 $this->setting["datasets-spacing-n"] = false;
                 $this->setting["reverse-datasets"] = false;
                 $this->setting["stacked"] = false;
@@ -118,7 +124,8 @@ class ChartBoy
     {
         if (!isset($caption)) {return;}
         $this->caption = $caption;
-        // If someone sets the caption, assume they want it to be seen
+        // If someone sets the caption, assume they want it to be seen,
+		// unless 'false' is specified as the second argument.
         $this->setting["show-heading"] = $display;
     }
 
@@ -130,24 +137,29 @@ class ChartBoy
     }
 
     public function changeSetting($key, $value = true)
-    {$this->setting[$key] = $value;}
+    {
+		// Change a current setting, defaulting to making it 'true'
+		// if they do not specify what, as all settings are 'false' by default.
+		$this->setting[$key] = $value;
+	}
 
     public function inputData($array)
     {
         // Takes in a new input data array and updates calculations regarding it.
+		// TODO: 'Multiple dataset' support
         $this->data = $array;
         $this->min = min($array);
         $this->max = max($array);
     }
 
-    // Getters
+    /* Getters */
 
     public function renderChart($idset = null)
     {
         $id = (isset($idset)) ? " id='$idset'" : null;
-		$settings = $this->compileSettings();
+        $settings = $this->compileSettings();
 
-		/* Begin Render */
+        /* Begin Render */
         print("\n\t<table class='charts-css {$this->type}{$settings}'{$id}>");
         if (!empty($this->caption)) {print("\n\t<caption>{$this->caption}</caption>");}
         print("\n\t<tbody>\n");
