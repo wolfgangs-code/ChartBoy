@@ -60,8 +60,6 @@ class ChartBoy
     private function makeScale($n)
     {
         // Calculate a percentage on a scale of 100.
-        // This is to hide exact values from the public,
-        // in case such information is sensitive.
         return round(($n / $this->max), 3);
     }
 
@@ -94,7 +92,7 @@ class ChartBoy
             case "area":
             case "line":
                 $this->startPoint = true;
-                // Below settings are not supported with the above data types.
+                // Below settings are not supported with the above data types as of 0.9.0
                 // See https://chartscss.org/development/supported-features/#classes
                 $this->setting["datasets-spacing-n"] = false;
                 $this->setting["reverse-datasets"] = false;
@@ -198,8 +196,7 @@ class ChartBoy
             /**/print($labelCode);
             /**/print("<td style='{$start}{$size}{$color}'>");
             /****/print("<span class='data'>{$figure}</span>");
-            /**/print("</td>");
-            print("</tr>\n");
+            print("</td></tr>\n");
         }
         print("\t</tbody>\n\t");
         print("\t</table>\n\t");
