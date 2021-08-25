@@ -1,37 +1,62 @@
-## Welcome to GitHub Pages
+# ChartBoy DocumentationBoy
 
-You can use the [editor on GitHub](https://github.com/wolfgang-degroot/ChartBoy/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Installation
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+TODO
 
-### Markdown
+## Usage
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+### Creating a new chart
+```php
+$chart = new ChartBoy\ChartBoy($arrayOfData);
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+You may also optionally set the type if not bar, primary and data axis labels, as well as the caption while creating a new chart.
 
-### Jekyll Themes
+```php
+$chart = new ChartBoy\ChartBoy($arrayOfData, "column", "Foo", "Bar", "How Much 'Foo' per 'Bar'?");
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/wolfgang-degroot/ChartBoy/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+### Rendering your chart
+Rendering is done through the `renderChart` method. While optional, you may use a string as an argument to give the chart an id in its HTML.
 
-### Support or Contact
+_Using a div as a wrapper:_
+```php
+<div><?=$chart->renderChart("optional-id");?></div>
+```
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+### Modifying your chart
+**Methods**
+
+ - `setType(type)`: Sets the chart type - All supported as of 0.9.0:
+   - bar
+   - column
+   - area
+   - line
+
+  - `setCaption(caption, display = true)`: Sets the caption, and enables the `show-heading` charts.css option to `true` unless the second parameter is specified to be `false`
+
+  - `setAxis(primary = null, data = null)`: Sets the axis labels, either being optional. Running this method with no parameters clears them, although this would make little sense to need to do as they are null by default.
+
+  - `setColor(element, color)`: Sets the color of an individual data point by its key. If no color is given, it will clear the key of its color.
+
+  - `inputData(array)`: Replaces the current dataset with an entirely new one, then recalculates the min/max.
+    - Calling this method will change no settings or other variables.
+
+  - `changeSetting(key, value = true)`:
+    - _See below_
+
+**charts.css Settings**
+
+To change a setting, use the `changeSetting(key, value = true)` method, where 'key' is the setting and 'value' is the value, e.g. true, false, or an integer.
+A full list and data type compatability table can be found [here.](https://chartscss.org/development/supported-features/)
+_For variable rules, the '*' is entered verbatim will be replaced with the value- If none is specified, defaults to 1._
+
+**Custom charts.css-based Settings**
+
+ - `hide-data-strict` _Enables `hide-data` and then masks the HTML to not include the value, even invisibly._
+
+--------------------
+
+##### by Wolfgang de Groot, 2021
+##### MIT License
