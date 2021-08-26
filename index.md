@@ -2,7 +2,10 @@
 
 ## Installation
 
-TODO
+**Composer**
+```composer
+composer require wolfgang-degroot/chartboy
+```
 
 ### Linking to charts.css easily via ChartBoy
 charts.css can be linked to via the function `ChartBoy\linkStyle(location);`, where 'location' is a string.
