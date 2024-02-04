@@ -9,4 +9,4 @@
   - Majority of all charts.css functions supported
   - _Still uses no JavaScript, naturally_
 
-[Documentation](https://wolfgang-degroot.github.io/ChartBoy/)
+[Documentation](https://wolfgangs-code.github.io/ChartBoy/)
